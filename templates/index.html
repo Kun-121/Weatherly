@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weather App</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: 'Roboto', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-size: cover;
+        background-position: center;
+        transition: background 0.5s ease-in-out;
+    }
+    .container {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px 25px;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        text-align: center;
+        width: 380px;
+    }
+    h1 {
+        margin-bottom: 25px;
+        font-size: 28px;
+        color: #333;
+    }
+    form {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+    }
+    input[type="text"] {
+        padding: 10px 15px;
+        width: 70%;
+        border: 2px solid #4facfe;
+        border-radius: 25px 0 0 25px;
+        outline: none;
+        font-size: 16px;
+    }
+    button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #4facfe;
+        color: white;
+        font-size: 16px;
+        border-radius: 0 25px 25px 0;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    button:hover { background-color: #00f2fe; }
+    .weather-card {
+        background: rgba(255,255,255,0.85);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .weather-card h2 { margin: 10px 0; color: #333; }
+    .weather-card p { margin: 5px 0; font-size: 16px; color: #555; }
+    .error { color: #ff4c4c; font-weight: bold; }
+
+    /* Map-style structure */
+    .weather-card p i { margin-right: 8px; }
+</style>
+</head>
+<body
+    {% if weather %}
+        {% if weather.description %}
+            {% if "rain" in weather.description.lower() %}
+                style="background-image: url('https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=1470&q=80');"
+            {% elif "cloud" in weather.description.lower() %}
+                style="background-image: url('https://images.unsplash.com/photo-1505672678657-cc7037095e48?auto=format&fit=crop&w=1470&q=80');"
+            {% elif "sun" in weather.description.lower() or "clear" in weather.description.lower() %}
+                style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80');"
+            {% else %}
+                style="background-image: url('https://images.unsplash.com/photo-1499346030926-9a72daac6c63?auto=format&fit=crop&w=1470&q=80');"
+            {% endif %}
+        {% endif %}
+    {% else %}
+        style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80');"
+    {% endif %}
+>
+<div class="container">
+    <h1><i class="fas fa-cloud-sun"></i> Weather Prediction</h1>
+    <form method="POST">
+        <input type="text" name="city" placeholder="Enter city" required>
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+    </form>
+
+    {% if weather %}
+        {% if weather.error %}
+            <p class="error">{{ weather.error }}</p>
+        {% else %}
+            <div class="weather-card">
+                <h2><i class="fas fa-map-marker-alt"></i> {{ weather.city }}</h2>
+                <p><i class="fas fa-thermometer-half"></i> Temperature: <strong>{{ weather.temperature }} °C</strong></p>
+                <p><i class="fas fa-tint"></i> Humidity: <strong>{{ weather.humidity }}%</strong></p>
+                <p><i class="fas fa-cloud"></i> Condition: <strong>{{ weather.description | capitalize }}</strong></p>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+</body>
+</html>
